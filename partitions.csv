@@ -1,0 +1,29 @@
+# ============================================================================
+# Partition table (ESP32-S3 N16R8, 16MB flash)
+#
+#   name       type       offset      size        purpose
+#   nvs        data/nvs   0x9000      24KB        key-value store: uid/motto
+#                                                 profile + per-pair cooldown
+#   phy_init   data/phy   0xf000      4KB         RF calibration (do not touch)
+#   factory    app        0x10000     12MB        firmware (incl. embedded
+#                                                 mjpeg + fonts, ~5.4MB used)
+#   cardstore  data       0xC10000    4MB         SPIFFS card store:
+#                                                 self.bin / card_<mac>.bin /
+#                                                 index.json
+#
+# Adjustable:
+#   - factory vs cardstore split: more/larger videos -> bigger factory;
+#     more cards -> bigger cardstore (full card ~33KB each). Total must fit
+#     16MB minus header offset; factory must be 0x10000-aligned,
+#     cardstore 64KB-aligned.
+#   - NOTE: after ANY change here you MUST erase the whole flash before
+#     reflashing (old data layout becomes invalid):
+#       pio run -t erase   then   pio run -t upload
+#   - IMPORTANT: keep this file ASCII-only (PlatformIO parses it with the
+#     system locale encoding; non-ASCII comments break checkprogsize).
+# ============================================================================
+# Name,      Type, SubType, Offset,   Size,     Flags
+nvs,         data, nvs,     0x9000,   0x6000,
+phy_init,    data, phy,     0xf000,   0x1000,
+factory,     app,  factory, 0x10000,  0xC00000,
+cardstore,   data, spiffs,  0xC10000, 0x3F0000,

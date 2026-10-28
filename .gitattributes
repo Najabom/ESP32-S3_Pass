@@ -1,0 +1,8 @@
+* text=auto
+*.bin binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.otf binary
+*.ttf binary
